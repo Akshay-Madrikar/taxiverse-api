@@ -9,12 +9,23 @@ exports.signup = async (req, res) => {
     const user = new User(req.body);
     await user.save();
 
+    const token = jwt.sign(
+      { _id: user._id.toString() },
+      process.env.JWT_SECRET
+    );
+
+    // persist the token as 't in cookie with expiry date
+    res.cookie("t", token, {
+      expire: new Date() + 999,
+    });
+
     res.status(201).json({
       user,
+      token,
     });
   } catch (error) {
     res.status(400).json({
-      error,
+      error: "Email ID exists",
     });
   }
 };
