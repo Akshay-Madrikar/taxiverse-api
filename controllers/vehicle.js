@@ -16,7 +16,7 @@ exports.vehicleById = async (req, res, next, id) => {
 };
 
 exports.read = async (req, res) => {
-  return res.status(200).json({ vehicle: req.vehicle });
+  return res.status(200).json(req.vehicle);
 };
 
 exports.create = async (req, res) => {
@@ -122,7 +122,7 @@ exports.listAll = async (req, res) => {
       throw new Error();
     }
 
-    res.status(201).json({ vehicles });
+    res.status(201).json(vehicles);
   } catch (error) {
     res.status(400).json({
       error: "Vehicles not found",

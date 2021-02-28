@@ -7,6 +7,7 @@ const cors = require("cors");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const vehicleRouter = require("./routes/vehicle");
+const bookingRouter = require("./routes/booking");
 
 require("./db/mongoose");
 require("dotenv").config();
@@ -23,6 +24,7 @@ app.use(cors());
 app.use("/api", authRouter);
 app.use("/api", userRouter);
 app.use("/api", vehicleRouter);
+app.use("/api", bookingRouter);
 
 //----- CONNECTION TO MONGODB ---------
 const port = process.env.PORT || 5000;

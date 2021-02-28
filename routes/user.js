@@ -12,7 +12,7 @@ router.get("/test/:userId", requiredSignin, isAuth, isAdmin, (req, res) => {
   });
 });
 
-router.get("/user/:userId", requiredSignin, isAuth, readProfile);
+router.get("/user", requiredSignin, isAuth, readProfile);
 
 router.param("userId", userById);
 

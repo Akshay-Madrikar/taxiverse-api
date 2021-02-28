@@ -25,6 +25,19 @@ const vehicleSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+
+    bookable: {
+      type: Number,
+      default: 1,
+    },
+    availableFrom: {
+      type: Date,
+      required: true
+    },
+    availableTo: {
+      type: Date,
+      required: true
+    }
   },
   {
     timestamps: true,

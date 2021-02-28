@@ -28,3 +28,42 @@ exports.readProfile = async (req, res) => {
     });
   }
 };
+
+exports.addBookingToUserHistory = async (req, res, next) => {
+  try {
+    let history = [];
+
+    const {
+      no_of_partners,
+      startDate,
+      endDate,
+      vehicleId,
+    } = req.body.bookingData;
+    history.push({
+      vehicleId: vehicleId,
+      partnersCount: no_of_partners,
+      bookedFrom: startDate,
+      bookedTo: endDate,
+    });
+
+    await User.findByIdAndUpdate(
+      {
+        _id: req.profile._id,
+      },
+      {
+        $push: {
+          history: history,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    next();
+  } catch (error) {
+    res.status(400).json({
+      error: "Could not update user booking history!",
+    });
+  }
+};

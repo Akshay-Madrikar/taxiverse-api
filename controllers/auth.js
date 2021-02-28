@@ -6,7 +6,10 @@ require("dotenv").config();
 
 exports.signup = async (req, res) => {
   try {
-    const user = new User(req.body);
+    const user = new User({
+      email: req.body.user.email,
+      password: req.body.user.password,
+    });
     await user.save();
 
     const token = jwt.sign(
@@ -33,8 +36,8 @@ exports.signup = async (req, res) => {
 exports.signin = async (req, res) => {
   try {
     const user = await User.findByCredentials(
-      req.body.email,
-      req.body.password
+      req.body.user.email,
+      req.body.user.password
     );
     const token = jwt.sign(
       { _id: user._id.toString() },
