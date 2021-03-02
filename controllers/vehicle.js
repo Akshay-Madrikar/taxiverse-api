@@ -21,17 +21,17 @@ exports.read = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { formData } = req.body;
     const {
-      name,
+      vehicleName,
       imageUrl,
       fuelType,
       price,
-      fuelChecklist,
+      bookable,
       availableFrom,
       availableTo,
-    } = formData;
-    if (!name || !price || !availableFrom || !availableTo) {
+    } = req.body.vehicleData;
+
+    if (!vehicleName || !price || !availableFrom || !availableTo) {
       return res.status(400).json({
         error:
           "Name, price, availableFrom and availableTo type fields are required!",
@@ -39,11 +39,13 @@ exports.create = async (req, res) => {
     }
 
     const vehicle = new Vehicle({
-      name,
+      name: vehicleName,
       imageUrl,
       fuelType,
       price,
-      fuelChecklist,
+      bookable,
+      availableFrom,
+      availableTo,
     });
     await vehicle.save();
     res.status(201).json({
@@ -51,7 +53,7 @@ exports.create = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({
-      error,
+      error: "Error in adding vehicle",
     });
   }
 };
@@ -96,6 +98,60 @@ exports.update = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       error: error.message,
+    });
+  }
+};
+
+exports.changeBookableStatus = async (req, res, next) => {
+  try {
+    await Vehicle.findByIdAndUpdate(
+      req.vehicle._id,
+      {
+        $set: {
+          bookable: 0,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    next();
+  } catch (error) {
+    res.status(400).json({
+      error: "Could not update bookable feature!",
+    });
+  }
+};
+
+exports.addFuelDate = async (req, res) => {
+  try {
+    const { fillDate } = req.body.fuelDateData;
+    const fuelChecklist = {
+      fillDate: fillDate,
+    };
+    if (!fillDate) {
+      return res.status(400).json({
+        error: "Date is required!",
+      });
+    }
+
+    const vehicle = await Vehicle.findByIdAndUpdate(
+      req.vehicle._id,
+      {
+        $push: { fuelChecklist: fuelChecklist },
+      },
+      {
+        new: true,
+      }
+    ).exec();
+
+    res.status(200).json({
+      fuelChecklist: vehicle.fuelChecklist,
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: "Error in adding fuel date",
     });
   }
 };

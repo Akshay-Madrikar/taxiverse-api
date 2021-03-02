@@ -1,24 +1,31 @@
 const express = require("express");
 const { userById, addBookingToUserHistory } = require("../controllers/user");
-const { vehicleById } = require("../controllers/vehicle");
+const { vehicleById, changeBookableStatus } = require("../controllers/vehicle");
 const { requiredSignin, isAuth, isAdmin } = require("../controllers/auth");
 const {
   bookingById,
   create,
+  read,
+  createLocation,
   cancelBooking,
   listBookings,
   listAllBookings,
+  processPayment,
 } = require("../controllers/booking");
 
 const router = express.Router();
 
+router.get("/booking/:bookingId", read);
 router.post(
   "/booking/create/:vehicleId/:userId",
   requiredSignin,
   isAuth,
+  changeBookableStatus,
+  createLocation,
   addBookingToUserHistory,
   create
 );
+router.put("/booking/payment/:userId", requiredSignin, isAuth, processPayment);
 router.delete(
   "/booking/:bookingId/:userId",
   requiredSignin,
@@ -27,7 +34,7 @@ router.delete(
 );
 router.get("/booking/list/:userId", requiredSignin, isAuth, listBookings);
 router.get(
-  "/booking/list/:userId",
+  "/booking/list-all/:userId",
   requiredSignin,
   isAuth,
   isAdmin,

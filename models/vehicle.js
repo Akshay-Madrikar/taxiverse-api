@@ -21,23 +21,25 @@ const vehicleSchema = new mongoose.Schema(
       default: 0,
     },
 
-    fuelChecklist: {
-      type: Array,
-      default: [],
-    },
-
+    fuelChecklist: [
+      {
+        fillDate: {
+          type: Date,
+        },
+      },
+    ],
     bookable: {
       type: Number,
       default: 1,
     },
     availableFrom: {
       type: Date,
-      required: true
+      required: true,
     },
     availableTo: {
       type: Date,
-      required: true
-    }
+      required: true,
+    },
   },
   {
     timestamps: true,

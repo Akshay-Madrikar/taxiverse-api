@@ -3,6 +3,7 @@ const expressJwt = require("express-jwt");
 
 const User = require("../models/user");
 require("dotenv").config();
+const { sendWelcomeEmail } = require("../emails/account");
 
 exports.signup = async (req, res) => {
   try {
@@ -10,6 +11,9 @@ exports.signup = async (req, res) => {
       email: req.body.user.email,
       password: req.body.user.password,
     });
+
+    sendWelcomeEmail(user.email);
+
     await user.save();
 
     const token = jwt.sign(
@@ -49,7 +53,13 @@ exports.signin = async (req, res) => {
       expire: new Date() + 999,
     });
 
-    const { _id, name, email, role } = user;
+    const { _id, name, email, role, block_status } = user;
+
+    if (block_status === 1) {
+      return res.status(400).json({
+        error: "User is blocked!!!",
+      });
+    }
 
     res.status(202).json({
       user: { _id, name, email, role },

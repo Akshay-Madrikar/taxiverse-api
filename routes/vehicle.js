@@ -7,6 +7,7 @@ const {
   update,
   remove,
   listAll,
+  addFuelDate,
 } = require("../controllers/vehicle");
 const { userById } = require("../controllers/user");
 
@@ -27,6 +28,13 @@ router.delete(
   isAuth,
   isAdmin,
   remove
+);
+router.post(
+  "/vehicle/:vehicleId/add-fuel/:userId",
+  requiredSignin,
+  isAuth,
+  isAdmin,
+  addFuelDate
 );
 router.get("/vehicles/all", listAll);
 

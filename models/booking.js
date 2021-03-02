@@ -13,8 +13,16 @@ const BookingSchema = new mongoose.Schema(
     bookedTo: {
       type: Date,
     },
+    amount: {
+      type: Number,
+    },
+    status: {
+      type: Number,
+      default: 0,
+    },
     vehicle: { type: ObjectId, ref: "Vehicle" },
     user: { type: ObjectId, ref: "User" },
+    location: { type: ObjectId, ref: "Location" },
   },
   { timestamps: true }
 );

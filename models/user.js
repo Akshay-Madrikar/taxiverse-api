@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    block_status: {
+      type: Number,
+      default: 0,
+    },
     resetToken: {
       type: String,
     },
